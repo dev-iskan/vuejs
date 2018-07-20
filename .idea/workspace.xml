@@ -16,17 +16,17 @@
       <file leaf-file-name="vue.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/vue.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="768">
-              <caret line="112" column="37" selection-start-line="112" selection-start-column="37" selection-end-line="112" selection-end-column="37" />
+            <state relative-caret-position="699">
+              <caret line="157" column="14" selection-start-line="157" selection-start-column="14" selection-end-line="157" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lesson 5/index.html">
+        <entry file="file://$PROJECT_DIR$/lesson 6/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="18" column="64" lean-forward="true" selection-start-line="18" selection-start-column="64" selection-end-line="18" selection-end-column="64" />
+            <state relative-caret-position="64">
+              <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -45,6 +45,7 @@
         <option value="$PROJECT_DIR$/lesson 4/index.html" />
         <option value="$PROJECT_DIR$/lesson 5/index.html" />
         <option value="$PROJECT_DIR$/vue.txt" />
+        <option value="$PROJECT_DIR$/lesson 6/index.html" />
       </list>
     </option>
   </component>
@@ -84,7 +85,7 @@
             <path>
               <item name="vuejs" type="b2602c69:ProjectViewProjectNode" />
               <item name="vuejs" type="462c0819:PsiDirectoryNode" />
-              <item name="lesson 5" type="462c0819:PsiDirectoryNode" />
+              <item name="lesson 6" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -126,12 +127,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1532065902889</updated>
-      <workItem from="1532065905330" duration="8323000" />
+      <workItem from="1532065905330" duration="10817000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8323000" />
+    <option name="totallyTimeSpent" value="10817000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -193,6 +194,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lesson 5/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="18" column="64" lean-forward="true" selection-start-line="18" selection-start-column="64" selection-end-line="18" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lesson1/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -202,15 +210,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vue.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="112" column="37" selection-start-line="112" selection-start-column="37" selection-end-line="112" selection-end-column="37" />
+        <state relative-caret-position="699">
+          <caret line="157" column="14" selection-start-line="157" selection-start-column="14" selection-end-line="157" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lesson 5/index.html">
+    <entry file="file://$PROJECT_DIR$/lesson 6/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="18" column="64" lean-forward="true" selection-start-line="18" selection-start-column="64" selection-end-line="18" selection-end-column="64" />
+        <state relative-caret-position="64">
+          <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
         </state>
       </provider>
     </entry>
