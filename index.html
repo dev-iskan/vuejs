@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"
+            integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+            crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+<div id="app">
+    <h1>{{message}}</h1>
+</div>
+
+</body>
+
+<script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+
+<script>
+    var app = new Vue({
+        el:'#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    });
+</script>
+</html>
