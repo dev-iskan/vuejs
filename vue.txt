@@ -260,3 +260,89 @@ computed: {
 // ...
 Теперь запись vm.fullName = 'Иван Иванов' вызовет сеттер, и vm.firstName и vm.lastName будут соответствующим образом обновлены.
 }
+
+
+урок 10 AJAX {
+watch
+Тип: { [key: string]: string | Function | Object | Array }
+
+Подробности:
+
+Объект, ключи которого — выражения для наблюдения, а значения — коллбэки, вызываемые при их изменении. Значения также могут быть строками с именами методов, или объектами, содержащими дополнительные опции. Экземпляр Vue вызовет $watch() соответствующий каждому ключу объекта при своём создании.
+
+Пример:
+
+var vm = new Vue({
+  data: {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+    e: {
+      f: {
+        g: 5
+      }
+    }
+  },
+  watch: {
+    a: function (val, oldVal) {
+      console.log('новое значение: %s, старое значение: %s', val, oldVal)
+    },
+    // строка с именем метода:
+    b: 'someMethod',
+    // глубокий (рекурсивный) наблюдатель:
+    c: {
+      handler: function (val, oldVal) { /* ... */ },
+      deep: true
+    },
+    // коллбэк будет вызван сразу же после начала наблюдения
+    d: {
+      handler: function (val, oldVal) { /* ... */ },
+      immediate: true
+    },
+    e: [
+      function handle1 (val, oldVal) { /* ... */ },
+      function handle2 (val, oldVal) { /* ... */ }
+    ],
+    // отслеживание значения `vm.e.f`: {g: 5}
+    'e.f': function (val, oldVal) { /* ... */ }
+  }
+})
+vm.a = 2 // => новое значение: 2, старое значение: 1
+Обратите внимание, что вам не стоит использовать стрелочные функции при определении наблюдателей
+ (напр. searchQuery: newValue => this.updateAutocomplete(newValue)).
+ Поскольку стрелочные функции связываются с родительским контекстом,
+ this не будет указывать на экземпляр Vue, и this.updateAutocomplete окажется неопределённым.
+
+
+
+нужно отправлять после написания 5 символов, для этого используется свойство watch у vuejs:
+в нем мы пропишем что пока не набраны 5 символов, startingCity будет пустой строкой, далее идет проверка и вызов метода
+который будет отправлять api запрос:
+ startingZip: function () {
+                this.startingCity = '';
+                if(this.startingZip.length==5){
+                    //call API
+                    this.lookupStartingZip();
+                }
+            }
+
+ далее  метод lookupStartingZip () должен вызвать методы axios которые непосрелственно будут отправлять запрос API,
+ после получения данных мы приравниваем их к нашему startingCity:
+ lookupStartingZip: _.debounce(function () {
+                 var vm =this;//vue model
+                 vm.startingCity = "Searching...";
+                 //API request
+                 axios.get('http://ziptasticapi.com/' + vm.startingZip)
+                     .then(function (response) {
+                     vm.startingCity = response.data.city + ', ' + response.data.state;
+                 })
+                     .catch(function (error) {
+                         vm.startingCity="Invalid Zipcode";
+                     });
+             }, 500),
+
+ тут также используется метод _debounce(function, delay) - суть которого в том что он позволяет вызвать определенный метод
+ через определенное количество миллисекунд, это нужно для того чтобы не произошли не предвиденные изменения, плюс для лучшего UI
+ мы сначала пропишем в startingCity значение Searching..., чтобы пока идет запрос пользователь видел что что-то будет изменяться
+}
