@@ -208,3 +208,55 @@ console.log(vm.reversedMessage) // => 'акоП'
  Vue знает, что vm.reversedMessage зависит от vm.message, так что при обновлении vm.message обновятся и все элементы, зависящие от vm.reversedMessage.
  И самое главное, что эту зависимость мы указали декларативно: геттер вычисляемого свойства не имеет побочных эффектов, что упрощает как понимание кода, так и тестирование.
 }
+
+
+урок 8, computed setters and getters{
+
+разница между методами и computed properties в том что vuejs кеширует computed properties так что в при обьявлении нового обьекта
+и использовании того же computed property vue просто возьмет с кеша сохраненные значения.
+
+
+computed properties созданы для того чтобы их подключать к getters and setters
+
+по умолчанию мы работаем с геттером
+ fullname: function() {
+                return this.first + " " + this.last
+ }
+
+чтобы создать setter нужно распределить computed properties на get и set, также есть input для fullname:
+<label>Full Name:</label>
+<input type="text" class="form-control" v-model="fullname" />
+
+ fullname: {
+                //getter getting fullname as combination of first and last name
+                get: function () {
+                    return this.first + " " + this.last;
+                },
+                //setter setting first and lastname be changing computed properties input
+                set: function (fullname) {
+                    var name = fullname.split(' ');
+                    this.firstName=name[0];
+                    this.lastName=name[name.length-1];
+                }
+            }
+
+По умолчанию вычисляемые свойства работают только на чтение, но в случае необходимости вы можете также указать и сеттер:
+
+// ...
+computed: {
+  fullName: {
+    // геттер:
+    get: function () {
+      return this.firstName + ' ' + this.lastName
+    },
+    // сеттер:
+    set: function (newValue) {
+      var names = newValue.split(' ')
+      this.firstName = names[0]
+      this.lastName = names[names.length - 1]
+    }
+  }
+}
+// ...
+Теперь запись vm.fullName = 'Иван Иванов' вызовет сеттер, и vm.firstName и vm.lastName будут соответствующим образом обновлены.
+}
