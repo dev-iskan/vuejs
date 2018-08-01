@@ -658,3 +658,24 @@ beforeDestroy: function(){
 destroy: function(){
 } - после уничтожения
 
+
+
+
+Cli {
+чтобы установить cli нужно сначала запустить команды
+npm install -g @vue/cli
+npm install -g @vue/cli-init
+
+далее
+vue init webpack-simple vue-project - где webpack-simple это template, а vue-project это имя проекта
+
+
+
+render: - функция которая позволяетс запускать приложение,
+внутри App.vue есть ES6 метод export default - который экспортирует обьект со всеми методами vue
+
+}
+
+Компоненты{
+
+}
