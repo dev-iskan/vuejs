@@ -677,5 +677,133 @@ render: - функция которая позволяетс запускать 
 }
 
 Компоненты{
+    lesson 1 {
+        Components are one of the most powerful features of Vue.js.
+        They help you extend basic HTML elements to encapsulate reusable code.
+        At a high level, Components are custom elements that Vue.js’ compiler would attach specified behavior to.
+        In some cases, they may also appear as a native HTML element extended with the special is attribute.
 
+        для того чтобы создать компонент, нужно использовать метод у Vue:
+        Vue.component('tag-name', {
+            template: ``,
+            data: function(){
+                return {
+                }
+            }
+        });
+        где мы видим первым параметром компонент принимает название тега которвым он будет вызываться, второй параметр
+        это обьект инициализации vue
+        в нем обязательно должно быть свойство template - это и есть тот шаблон html который будет производиться вместо
+        тегов
+
+        data - здесь функция.
+    }
+
+    lesson 2 {
+        data именно функция т.к. компоненты могут повторяться на странице, но их суть заключается в том что каждый из них должен быть идентичен.
+        если мы будем использовать data к функция которая возвращает обьект, то мы получается регистрируем для каждого компонента
+        свою персональную функцию которая будет возвращать данные именно для своего компонента. То есть javascript будет создавать новый обьект
+        для каждого компонента.
+
+        В случае когда мы используем обьект data то все переменные для этого обьекта будут едины для всех компонентов использующих данный обьект:
+
+        var dataObj= {
+            counter: 0
+        }
+
+        Vue.component..:
+            data: dataObj
+
+        и тогда если мы будем нажимать на кнопку add у разных компонентов, коунтер будет увеличиаваться у всех одновременно, т.к. все компоненты имеют доступ к одной переменной
+    }
+
+
+    lesson 3 {
+        существует возможность регистрировать компоненты глобально и локально, в предудыщих 2 уроках мы регистрировали компонент глобально, но тут будем регать локально
+        это делается для того чтобы если у нас существуют несколько приложений vue например app и app2, и у них могут быть компоненты с одинаковым названием но разным функционалом
+        то глобально созданные компоненты не будут удобны.
+
+        для локального создания мы можем в обьекте vue использовать свойство components :
+        components: {
+            'my-counter': {
+                template: `
+                    <div style="border:1px solid black; padding: 10px;">
+                      <h2>Counter: {{counter}}</h2>
+                      <button @click="add">Add</button>
+                    </div>
+                 `,
+                data: function () {
+                    return {
+                        counter: 0
+                    }
+                },
+                methods: {
+                    add: function () {
+                        this.counter++;
+                    }
+                }
+            }
+        }
+
+        теперь соответственно в app2 vue не видит такой компонент как my-counter
+    }
+
+    lesson 4 {
+        название компонентов инициализируется через строку как в уроке выше, но иногда это не возможно, поэтому ткаже возможно называть компоненты
+        не в строковом формате, а используя camelCase, а vue сам распарсит и создатся тег в kebab-case:
+        el: '#app2',
+            components: {
+                myCounter: {
+                    template: `
+                        <div style="border:1px solid black; padding: 10px;">
+                          <h2>Counter: {{counter}}</h2>
+                          <button @click="add">Add</button>
+                        </div>
+                     `,
+                    data: function () {
+                        return {
+                            counter: 0
+                        }
+                    },
+                    methods: {
+                        add: function () {
+                            this.counter++;
+                        }
+                    }
+                }
+        }
+    }
+
+
+    lesson 5  {
+        переходим в cli vue-project
+
+        создаем компонент Car.vue
+
+        также можно зарегистрировать компоненты глобально и локально:
+        глобально: в main.js импортируем данный компонент, и через метод Vue.component() создаем его:
+            // import Car from './Car.vue'
+            //
+            // Vue.component('app-car', Car);
+
+        локально: в App.vue импортируем опять таки компонент и в свойстве components добавляем данный компонент:
+            import Car from './Car.vue'
+
+            export default {
+                data() {
+                    return {
+                        msg: 'Welcome'
+                    }
+                },
+                components: {
+                    appCar: Car
+                }
+            }
+    }
+
+
+    lesson 6 {
+
+
+    }
 }
