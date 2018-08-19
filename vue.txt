@@ -990,4 +990,111 @@ render: - функция которая позволяетс запускать 
           <p slot="p">test</p>
 	}
   }
+
+
+
+  Директивы {
+  lesson 1 {
+    создание собственной директивы
+
+	для того чтобы создать директиву нужно:
+	1 - создаем файл в src в котором будем описывать эту директиву, пример color.js:
+	export default {
+
+    }
+
+    2 - импортируем ее в main.js и с помощью метода Vue.directive(name, objectDescription) инициализируем ее:
+    import ColorDirective from 'color.js'
+
+    Vue.directive('colored', ColorDirective);
+    new Vue({
+      el: '#app',
+      render: h => h(App)
+    })
+  }
+
+
+  lesson 2 {
+	директива это обьект, и первый метод при ее инициализации это метод bind(el, bindings, vnode){}
+	где el - элемент к которому добавляется директива, bindings - содержит все свойства которые будем передавать внутрь директивы: значение, имя и т.д.
+	vnode - обьект хранящий место где будет храниться директива. Последние два параметра readonly:
+
+	сам bind() описываем :
+	 bind(el, bindings, vnode) {
+            // el.style.color = 'red';
+            el.style.color = 'blue';
+    }
+
+    и инициализируем директиву внутри vue компонента:
+        <h2 v-colored>{{msg}}</h2>
+  }
+
+
+  lesson 3 {
+  жизненный цикл:
+    bind(el, bindings, vnode) - инициализируется и прикрепляется к виртуальному DOM, но еще не в реальном DOM
+    inserted(el, bindings, vnode) - директива уже добавлена в реальное DOM
+    update(el, bindings, vnode, oldvnode) - вызывается когда что то происходит внутри DOM дерева
+	componentUpdated(el, bindings, vnode, oldvnode) - вызывается сразу после update если были изменены дочерние элементы
+	unbind() - когда директива убирается из DOM или прекращает существ
+  }
+
+  lesson 4 {
+  передача переменных:
+	для того чтобы передавать значения в директивы можно просто в кавычках прописать значение:
+	<h2 v-colored="'green'">{{msg}}</h2> в нашем случае мы передаем цвет green
+
+	и в цикле bind() получить это значение:
+	el.style.color = bindings.value;
+
+	то есть через bindings параметр мы можем получить доступ к переменныи передаваемым в директивы
+  }
+
+  lesson 5 {
+  передача аргументов директивы:
+  аргументом называется вот такая конструкция:
+  <button v-on:click> - аргумент идет после : и называется click
+
+	чтобы получить доступ мы в обьекте директивы прописываем:
+	 bind(el, bindings, vnode) {
+        const argument = bindings.arg; // получаем как раз слово после : background или color
+        el.style[argument] = bindings.value;
+     },
+
+     и в самом шаблоне:
+     <h2 v-colored:background="'green'">{{msg}}</h2>
+     <h2 v-colored:color="'blue'">{{msg}}</h2>
+  }
+
+  lesson 6 {
+    модификаторы:
+    <button v-on:click.prevent> - где prevent это и есть модификатор
+
+	создадим в шаблоне такие модификаторы:
+	 <h2 v-colored:background.font="'green'">{{msg}}</h2>
+        <h2 v-colored:color.delay.font="'blue'">{{msg}}</h2>
+
+    все модификаторы приходят в параметр bindings.modifiers:
+   const fontModifier = bindings.modifiers['font']; //так мы получаем модификаторы переданные в директиву, получает либо true либо false
+
+	далее мы проверяем если есть или нет данной переменной мы прописываем логику:
+	if(fontModifier){
+        el.style.fontSize ='30px'
+    }
+  }
+
+  lesson 7 {
+     локальная инициализация:
+     можно инициализировать директивы внутри компонентов через:
+     directives: {
+		font: {
+		bind(el,bindings, vnode){
+		el.style.fontSize = '40px'
+		}
+		}
+     }
+		так можно инициализировать
+     <h2 v-font>Local directive</h2>
+  }
+  }
 }
