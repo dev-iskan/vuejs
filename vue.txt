@@ -1286,5 +1286,115 @@ render: - функция которая позволяетс запускать 
                 this.$emit('input', newValue);
             }
         }
+}
 
+
+
+
+
+Валидация:
+{
+    в Vue нету встроенной валидации, но можно подключить пакет vuelidate, после установки через команду
+    npm install vuelidate --save
+    мы подключаем ее в main.js и используем в vue:
+    import Vuelidate from 'vuelidate'
+    Vue.use(Vuelidate);
+
+    чтобы использовать валидацию input мы должны подключить валидаторы в обьекте Vue:
+    import { required, email} from 'vuelidate/lib/validators'
+
+    и уже конкретно для валидации определенной переменной в свойстве validations мы прописываем:
+     validations: {
+        email : {
+            required,
+            email
+        }
+     }
+
+     а input подключаем обработчик события на blur:
+      <input type="email" id="email" class="form-control" @blur="$v.email.$touch()" v-model="email">
+
+
+    визуализировать ошибки очень просто:
+    <input type="email"
+       id="email"
+       class="form-control"
+       :class="{'is-invalid' : $v.email.$error}"
+       @blur="$v.email.$touch()"
+       v-model="email">
+     <div v-if="!$v.email.required" class="invalid-feedback">
+         Email field is required!
+     </div>
+     <div v-if="!$v.email.email" class="invalid-feedback">
+         This field should be email!
+     </div>
+
+     Используя простую bootstrap визуализацию мы можем отображать ошибки валидации:
+     1 - для покрашивания границ в красный мы биндим class на $v.email.$error, то есть если есть хоть какая то ошибка,
+     то будет подключен is-invalid класс
+
+     2 - подключаем в DOM div с классом invalid-feedback через условия если не соответствуют определенным параметрам валидации:
+      v-if="!$v.email.email"
+
+
+
+
+    валидация пароля:
+    обычная валидация на required, но также добавим валидацию по потверждению пароля:
+    для этого создадим новую модель, и валидацию для нее:
+    confirm_password: ''
+    confirm_password: {
+        required,
+        sameAs: sameAs((vue)=>{
+            return vue.password
+        })
+    }
+
+    как видно мы используем ключ значение обьект, где передаем обьект vue и у него берем password, это делается в случае
+    многоуровневых переменных:
+    form: {
+        password: ''
+    }
+
+    и такая же html форма:
+    <label for="confirm_password">Confirm Password</label>
+    <input type="password"
+           id="confirm_password"
+           class="form-control"
+           :class="{'is-invalid' : $v.confirm_password.$error}"
+           @blur="$v.confirm_password.$touch()"
+           v-model="confirm_password">
+    <div v-if="!$v.confirm_password.sameAs" class="invalid-feedback">
+        Password should match!
+    </div>
+    <div v-if="!$v.confirm_password.required" class="invalid-feedback">
+        Password field is required!
+    </div>
+
+
+
+    собственный валидатор:
+    для создания своего валидатора достаточно в validations создать новый ключ и присвоить функцию которая будет возвращать либо true либо false:
+    uniqueEmail: function(newEmail) {
+            if(newEmail === '') return true;
+           return new Promise((resolve,reject)=>{
+                setTimeout(()=>{
+                    let value = newEmail !== 'test@mail.ru'
+                    resolve(value)
+                }, 1800)
+           })
+
+            // return newEmail !== 'test@mail.ru'
+    }
+    true значит проходит валидацию, false если нет
+    <div v-if="!$v.email.uniqueEmail" class="invalid-feedback">
+        This email already exists!
+    </div>
+
+
+    для обработки формы создадим кнопку:
+    <button type="submit" class="btn btn-success mt-3" :disabled="$v.$invalid">Submit</button>
+
+    и у формы добавим event listener @submit:
+    <form class="pt-4" @submit.prevent="onSubmit">
 }
