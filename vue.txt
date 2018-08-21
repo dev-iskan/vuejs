@@ -1190,3 +1190,101 @@ render: - функция которая позволяетс запускать 
 
 
 
+Работа с формами {
+    textarea: если мы хотим чтобы при сохранении модели через v-model в текстовом поле также сохранялись пробелы и табуляции,
+    то в стилях пропишем следующее:
+    p{
+        white-space: pre;
+    }
+    то есть мы разрешаем через css отображать white-spaces у параграфа
+
+
+    checkbox: для моделирования чекбоксов делаем следующее:
+    создаем масстив куда сохранять будем значения,
+     social: []
+    создаем input с типом checkbox даем им значение и добавляем v-model на этот массив:
+        <label for="">
+            <input type="checkbox" value="vk" v-model="social"> Vk
+        </label>
+        <label for="">
+            <input type="checkbox" value="facebook" v-model="social"> Facebook
+        </label>
+        <label for="">
+            <input type="checkbox" value="instagram" v-model="social"> Instagram
+        </label>
+
+
+    radio:
+    такая же структура как у checkbox , но переменная уже будет не массивом а просто строкой:
+    social: ''
+
+
+    select:
+        <select v-model="defaultSocial">
+            <option v-for="item in socialList">{{item}}</option>
+        </select>
+
+        и в массиве data:
+        socialList: ['instagram', 'vk', 'facebook'],
+        defaultSocial: 'facebook'
+
+    number:
+    в html в input всегда возвращается строка, но если нам нужно получить именно number значение, для этого мы можем использовать
+    модификатор .number:
+    <input type="number" v-model.number="age">
+
+
+    использование v-model на компонентах:
+    Пользовательские события также могут использоваться для создания нестандартных элементов
+    ввода, которые работают через v-model.
+    При использовании на компоненте, v-model вместо этого делает следующее:
+    <custom-input
+      v-bind:value="searchText"
+      v-on:input="searchText = $event"
+    ></custom-input>
+
+    Чтобы это действительно работало, элемент <input> внутри компонента должен:
+
+    Привязывать значение атрибута value к входному параметру value
+    По событию input генерировать собственное пользовательское событие input с новым значением
+    Вот это в действии:
+
+    Vue.component('custom-input', {
+      props: ['value'],
+      template: `
+        <input
+          v-bind:value="value"
+          v-on:input="$emit('input', $event.target.value)"
+        >
+      `
+    })
+    Теперь v-model будет прекрасно работать с этим компонентом:
+
+    <custom-input v-model="searchText"></custom-input>
+
+    в нашем случае:
+        создаем компонент onoff и подключим в app.vue:
+         <onoff v-model="switched"></onoff>
+            <div>
+                <h3 v-if="switched">Component is enabled</h3>
+                <h3 v-else>Component is disabled</h3>
+            </div>
+
+         switched: false
+        значение передаваемое в компонент будет получено в props
+        props: ['value'],
+
+        далее внутри onoff прописываем:
+        <div>
+            <button class="on" :class="{'active' : value}" @click="onChange(true)">On</button>
+            <button class="off" :class="{'active' : !value}" @click="onChange(false)">Off</button>
+        </div>
+
+        где также есть методы:
+        methods: {
+            onChange(newValue) {
+                this.$emit('input', newValue);
+            }
+        }
+
+}
