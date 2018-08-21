@@ -1097,4 +1097,96 @@ render: - функция которая позволяетс запускать 
      <h2 v-font>Local directive</h2>
   }
   }
+
+Фильтры и миксины{
+    Фильтры это специальные трансформеры которые позволяют нам преобразовывать отображение каких либо строк или элементов:
+
+    регистрировать фильтры можно глобально и локально:
+    глобально в main.js обращаемся к Vue инстансу и создаем фильтр через метод filter, где первым параметром пишем название
+    а вторым мы пишем ФУНКЦИЮ которое получает какое то исходное значение которое нужно будет преобразовать, в нашем случае
+    мы преобразуем value в верхний регистр:
+    Vue.filter('uppercase', value=>value.toUpperCase());
+
+    для локального создания в свойстве filters создаем функцию опять таки как выше:
+    filters: {
+    lowercase(value) {
+       return value.toLowerCase();
+        }
+    }
+
+    вызываются фильтры в template через вертикальную черту, где перед чертой то значение которое нужно преобразовать:
+    <h1>{{ msg | lowercase }}</h1>
+    <h1>{{ msg | uppercase }}</h1>
+
+    также есть возможность применять фильтры несколько раз:
+    <h1>{{ msg | uppercase | lowercase}}</h1>
+
+Фильтрация списков:
+        для того чтобы фильтровать списки есть достаточно простой способ:
+
+        создаем массив фруктов и стринговое поле search:
+         fruits: ['apple', 'banana', 'orange', 'peach'],
+        search: ''
+
+        далее отображаем в шаблоне:
+        <input type="text" v-model="search">
+        <ul>
+            <li v-for="fruit in filteredFruits">{{fruit}}</li>
+        </ul>
+
+        то есть у нас есть input search в котором мы ищем фрукт и есть список всех фруктов соответствующих поиску,
+        но filteredFruits это computed метод, в нем и просходит сравнение и т.д.:
+        computed: {
+            filteredFruits(){
+                return this.fruits.filter(fruit=>{
+                    return fruit.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
+                })
+            }
+        }
+
+
+Миксины:
+        Миксины это инстансы vue которые можно использовать для исключения повторения кода, бывают случаи когда код нужно
+        дублировать, но вместо тупо копипастинга можно использовать mixin:
+
+        1 - локально: создаем файл listMixin.js и туда вставляем код который хотим чтобы дублировался:
+        export default {
+            data() {
+                return {
+                    fruits: ['apple', 'banana', 'orange', 'peach'],
+                    search: ''
+                }
+            },
+            computed: {
+                filteredFruits(){
+                    return this.fruits.filter(fruit=>{
+                        return fruit.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
+                    })
+                }
+            }
+        }
+
+        в компонентах регистрируем mixin, сначала импортируем и потом в свойстве mixins: [] в массив добавляем тот обьект:
+           import ListMixin from './listMixin.js'
+           mixins: [ListMixin]
+
+        Важно заметить внутри файла обьекта можно использовать абсолютно весь функционал Vue и если значения из миксинов и компонентов
+        повторяются то сначала будет производиться значения из компонента а потом из миксина:
+         data() {
+            return {
+                msg: 'Welcome to Your Vue.js App',
+            }
+         },
+          mixins: [ListMixin]
+
+          глобально создается через метод:
+          Vue.mixin({
+              beforeCreate(){
+                console.log('beforecreate')
+              }
+          })
 }
+
+
+
+
