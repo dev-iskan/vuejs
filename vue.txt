@@ -1410,4 +1410,328 @@ Vue - router {
     import VueRouter from 'vue-router'
     Vue.use(VueRouter);
 
+
+    lesson 2 {
+        создаем n страниц:
+        для этого создаем папку pages в src где будут храниться компоненты которые и есть по сути страницы
+
+        далее чтобы их зарегистрировать мы создадим в src файл под названием routes.js где будет экспортироваться по дефолту
+        обьект VueRouter который в виде массива будет хранить эти компоненты с назначенными на них путями:
+
+            import VueRouter from 'vue-router'
+            import Home from  './pages/Home.vue'
+            import Cars from  './pages/Cars.vue'
+
+            export default new VueRouter ({
+                routes: [
+                    {
+                        path: '', //localhost:8080
+                        component: Home
+                    },
+                    {
+                        path: '/cars',
+                        component: Cars
+                    }
+                ],
+                mode: 'history'
+            });
+        тут мы видим что импортируются компоненты, где в виде массива мы сохраняем их как обьекты, также в свойстве mode
+        мы добавили history для того чтобы убрать хештег в дефолтном роуте
+
+        и чтобы все работало мы экспортируем этот обьект в main.js:
+            import router from './routes'
+
+            new Vue({
+              el: '#app',
+              render: h => h(App),
+              router    // вот он
+            });
+
+        и запускаем в App.vue в виде тега <router-view>. Vue.js сам поймет что нужно делать с этим тегом
+
+        теперь у нас при вводе в url страницы либо / либо /cars мы динамически будем менять страницу
+    }
+
+
+    lesson 3 {
+        для того чтобы сделать смену страницы динамически нужно вместо тега <a> создать тег <router-link> и в его атрибуте
+        to написать путь:
+            nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/">Home</router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" to="/cars">Cars</router-link>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+        здесь используется bootstrap 4
+
+        теперь все работет динамически
+    }
+
+    lesson 4 {
+        чтобы стилизовать активные страницы необходимо создать router-link не просто на тег <a> а на весь блок:
+        то есть заменяем:
+            <li class="nav-item">
+                <router-link class="nav-link" to="/cars">Cars</router-link>
+             </li>
+        на :
+             <router-link tag="li" class="nav-item" to="/cars" active-class="active">
+                <a class="nav-link">Cars</a>
+              </router-link>
+
+        тут мы видим что мы присвоили router-link тег - li, далее добавляем class, и в специальном аттрибуте
+        active-class добавляем необходимый класс, также чтобы при переходе на каждый пункт active класс был уникальным
+        необходимов добавить аттрибут exact для самого первого пункта:
+            <router-link tag="li" class="nav-item" exact to="/" active-class="active">
+                <a class="nav-link">Home</a>
+            </router-link>
+    }
+
+    lesson 5 {
+        динамические роуты с параметрами
+        допустим мы хотим выводить в /cars список всех машин, и это будет динамически:
+        для этого создадим в Cars.vue список:
+            <ul>
+                <router-link tag="li" class="nav-item"
+                v-for="car in 5"
+                :to="'/car/'+car"
+                :key="car">
+                    <a class="nav-link">Car {{car}}</a>
+                </router-link>
+            </ul>
+        здесь мы создаем 5 ссылок на /car который будет обрабатываться vue-routerом
+
+        далее создадим страницу для каждой отдельной машины, и добавим компонент в routes.js:
+
+        Car.vue:
+            <template>
+                <div>
+                    <h1>Car id {{id}}</h1>
+                </div>
+            </template>
+
+            <script>
+                export default {
+                    data() {
+                        return {
+                            // id: this.$router.currentRoute.params['id']  либо так либо как снизу
+                            id: this.$route.params['id']
+                        }
+                    },
+                    watch: {
+                        $route(toR, fromR) {
+                            this.id = toR.params['id']
+                        }
+                    }
+                }
+            </script>
+        Тут мы берем значение передаваемое в Url строку через методы:
+        this.$route.params['id']
+        а также для того чтобы id сменялось динамически мы в стату watch() добавили просмотр изменения id ,
+        без него цифра не будет меняться
+
+        routes.js:
+            import Car from './pages/Car.vue'
+            ...
+             {
+                path: '/car/:id', // id можем называть как угодно
+                component: Car
+             }
+            ...
+
+        и в App.vue добавим дополнительно ссылки на 3 и 4 машины:
+            <router-link tag="li" class="nav-item" to="/car/3" active-class="active">
+            <a class="nav-link">Car 3 </a>
+          </router-link>
+
+          <router-link tag="li" class="nav-item" to="/car/4" active-class="active">
+            <a class="nav-link">Car 4</a>
+          </router-link>
+    }
+
+    lesson 6 {
+        программная навигация:
+        создадим ссылку в Car которая будет возвращать к списку всех машин, для этого создадим в Car.vue кнопку:
+             <button class="btn btn-sm btn-info" @click="goBackToCars">Back</button>
+        ей присвоим обработчик события goBackToCars():
+             goBackToCars(){
+                this.$router.push('/cars')
+             }
+        данный обработчик вызывает у $router метод push() с адресом страницы куда надо перейти
+    }
+
+
+    lesson 7 {
+        внутренние роуты
+        создадим внутренний роут CarFull, т.к. он дочерний у Car то мы должны его зарегистрировать в свойстве children
+        в routes.js:
+            {
+                path: '/car/:id', // id можем называть как угодно
+                component: Car,
+                children: [
+                    {
+                        path: 'full', //localhost:8080/car/10/full
+                        component: CarFull,
+                        name:'CarFull'
+                    }
+                ]
+            },
+        тут нужно заметить что есть еще свойство name, необходимое для перехода по to в router-link
+        далее для того чтобы данный компонент был виден мы должны в Car.vue добавить тег <router-view> т.к
+        это его дочерний view:
+            <router-link class="btn btn-sm btn-info mt-2"
+                         tag="button"
+                        :to="{name: 'CarFull', params: {id: id}}"
+            >Full info</router-link>
+            <hr>
+            <router-view></router-view>
+
+         также мы тут добавили кнопку вызывающюю данный компонент, и у нее в атрибуте to мы забиндили такую конструкцию:
+            :to="{name: 'CarFull', params: {id: id}}"
+         она нам говорит чтобы путь был туда у которого в компоненте есть данное имя с параметрами, в нашем случае
+         параметр это id у Car пути, и его ребенке carfull:
+         path: '/car/:id' +  path: 'full', //localhost:8080/car/10/full
+
+    }
+
+    lesson 8 {
+        передача параметров:
+        query параметры это параметры которые передаются методом GET в url
+
+        допустим мы хотим передавать имя и год машины в компонент CarFull, для этого нам необходимо в аттрибут to в
+        компоненте Car добавить следующее:
+            :to="{name: 'CarFull', params: {id: id}, query: {name: 'Mazda', year: 2000}}"
+        тоесть в query отправляем обьект с определенными свойствами
+
+        далее обрабатываем этот query в CarFull:
+            <template>
+            <div>
+                <h4>Car name: {{ this.$route.query['name']}}</h4>
+                <h5>Car year: {{ year}}</h5>
+            </div>
+            </template>
+
+            <script>
+            export default {
+                computed: {
+                    year(){
+                        return  this.$route.query.year;
+                    }
+                }
+            }
+            </script>
+        таким образом мы можем получить данные либо через структуру this.$route.query.name
+        либо через computed метод
+    }
+
+
+    lesson 9 {
+        хэш и скролл:
+        хэш передается для того чтобы мы могли перейти в шаблоне к определенному id
+        для примера в CarFullсоздадим блоки и h6 с id:
+            <div class="scroll"></div>
+            <h6 id="scroll">Hello from the bottom</h6>
+            <div class="scroll"></div>
+
+            <style>
+            .scroll {
+                width: 100px;
+                height: 1000px;
+                background: #ccc;
+            }
+            </style>
+
+        далее в Car пути добавим такое свойство как hash, оно как раз и будет отправлять нас по id
+        данный параметр должен получать строку начинающюся с #:
+            <router-link class="btn btn-sm btn-info mt-2"
+                         tag="button"
+                        :to="{name: 'CarFull', params: {id: id}, query: {name: 'Mazda', year: 2000}, hash: '#scroll'}"
+            >Full info</router-link>
+
+        чтобы все работало правильно мы должны в routes.js создать новый метод scrollBehavior у обьекта VueRouter:
+             scrollBehavior (to, from, savedPosition){
+                if(savedPosition){
+                    return savedPosition;
+                }
+                if(to.hash){
+                    return {selector: to.hash};
+                }
+                return {
+                    x:0,
+                    y:0
+                };
+            }
+         тут мы видим что данная функция принимает себе to, from, savedPosition, именно данная функция будет переносить
+         нас тут куда прописано в коде:
+         для этого идут 3 проверки, первая нужна для того чтобы возвращать именно на ту позицию с которой начали,
+         вторая это to.hash то есть если у url есть hash то перенести именно к блоку с данным id и третья по дефолту
+    }
+
+
+    lesson 10 {
+        Редиректы
+        для того чтобы редиректить нужно в свойствах обьектов VueRouter создать свойство redirect:
+            {
+                path: '/none',
+                redirect: {
+                    name: 'Cars'
+                }
+            },
+        в данном примере при попытке перейти на роут none произойдет редирект на Cars
+
+        если мы хотим создать страницу 404: то для этого создадим компонент Eror и добавим его в routes.js:
+            <template>
+                <h1 style="color: red;">404 Error</h1>
+            </template>
+
+        и зарегистрируем:
+            {
+                path: '*',
+                component: ErrorCmp
+            }
+        тут мы видим что при любых других роутах будет вызван этот компонент
+    }
+
+
+    lesson 11 {
+        защита роутов
+
+        если мы хотим добавить какие то проверки перед переходом на какие то страницы, то для этого нам нужно
+        их защищать
+        первый способ это добавления метода beforeEnter() к обьектам VueRouter:
+            beforeEnter(to, from, next){
+                if(smth...){
+                    next(true);
+                }
+                else{
+                    next(false);
+                }
+            }
+        данный метод принимает to, from, next метода и проверяет определенную логику и далее либо разрешает переход либо нет
+
+        второй способ это добавления методов к компонентам:
+        метод beforeRouteEnter(to, from, next) и beforeRouteLeave(to, from, next) выполняют такую же логику но пишутся уже в
+        компонентах
+    }
+
+
+    lesson 12 {
+        Eager loading оптимизация
+        для оптимизации проекта желательно все страницы загружать по требованию а не сразу, если мы используме import
+        структуру то все компоненты будут подгружаться сразу, для использования lazy loading необходимо добавлять компоненты вот так:
+        в routes.js:
+            const Cars = resolve=>{
+                require.ensure(['./pages/Cars.vue'], ()=>{
+                    resolve(
+                        require('./pages/Cars.vue')
+                    )
+                })
+            };
+        данную схему webpack сам понимает и будет соответственно определенно подгружать, так мы подключим Cars.vue по требованию
+    }
 }
