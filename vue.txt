@@ -1398,3 +1398,16 @@ render: - функция которая позволяетс запускать 
     и у формы добавим event listener @submit:
     <form class="pt-4" @submit.prevent="onSubmit">
 }
+
+
+
+
+
+Vue - router {
+    устанавливаем npm install vue-router --save
+    далее в main.js добавляем следующее:
+
+    import VueRouter from 'vue-router'
+    Vue.use(VueRouter);
+
+}
