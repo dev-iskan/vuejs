@@ -1735,3 +1735,36 @@ Vue - router {
         данную схему webpack сам понимает и будет соответственно определенно подгружать, так мы подключим Cars.vue по требованию
     }
 }
+
+
+
+Vue -resource:{
+    lesson 1 {
+        pagekit/vue-resource устанавливаем
+        плагин для того чтобы делать асинхронные запросыы
+        npm install vue-resource --save
+
+        и сразу добавим его в main.js:
+        import VueResource from 'vue-resource'
+        Vue.use(VueResource);
+        
+        далее устанавливаем глобально JSON-server:
+        npm install -g json-server
+
+        и обязательно локально:
+        npm install --save-dev json-server
+
+        добавим в package.json новую конфигурацию:
+        "scripts": {
+            "server": "json-server --watch db.json"
+        },
+        таким образом мы можем запустить наш сервер открыв в консоли npm run server
+
+        и обязательно создадим в корневой папке файл db.json:
+        {
+            "cars": [ ]
+        }
+
+        запускаем 2 терминала: в одном пропишем npm run dev, во втором npm run server
+    }
+}
