@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Counter {{counter}}</h2>
+        <h2>Second Counter {{counter}}</h2>
     </div>
 </template>
 
@@ -8,7 +8,6 @@
     export default {
         computed: {
             counter() {
-                // return this.$store.state.counter 
                 return this.$store.getters.computedCounter
             }
         },

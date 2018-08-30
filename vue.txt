@@ -1903,13 +1903,148 @@ Vuex {
             export default new Vuex.Store({
                 
             });
+        тут мы создаем обьект new Vuex.Store в который в дальнейшем будем передавать значения
+
         и подлкючим в main.js:
             import store from './store'
             new Vue({
-            el: '#app',
-            store,
-            render: h => h(App)
+                el: '#app',
+                store,
+                render: h => h(App)
             })
+    }
+
+    lesson 2 {
+        в index.js в store добавим обязательный параметр state в котором будут храниться все 
+        необходимые данные, в нашем случае counter:
+            state: {
+                counter: 0,
+            }
         
+        и теперь можем почистить Action, App, Counter от внутренних изменений по emit, а также 
+        изменим метод увеличения счетчика в Action:
+            updateCounter(val){
+                // this.$emit('counterUpdated', val);
+                this.$store.state.counter+=val;
+            }
+        тут видно что мы обращаемся к $store.state.counter значению соответственно равному значению
+        в index.js
+
+        также в Counter создадим computed значение counter:
+            computed: {
+                counter() {
+                    return this.$store.state.counter 
+                }
+            },
+        возвращающее опять таки тот counter в state
+    }
+
+    lesson 3 {
+        getters:
+        геттеры нужны для возвращения из state проведя определенные вычисления и после этого отдавать
+        компоненту
+
+        необходимо зарегистрировать getters в index.js:
+            getters: {
+                computedCounter(state){
+                    return state.counter * 10
+                }
+            }
+        то есть это как бы computed свойство только у Vuex
+
+        теперь можем поправить код в Counter:
+        и возвращать в его computed counter уже getter:
+             counter() {
+                return this.$store.getters.computedCounter
+            }
+    }
+
+    
+
+    lesson 4 {
+        mutations (или setters):
+        компонент позволяющий изменять state, но разница между ним и getter в том что они мутируют state:
+            mutations: {
+                changeCounter(state, payload){
+                    state.counter+=payload;
+                }
+            }
+        тут первым параметром принимается state, и вторым обьект payload, именно обьект.
+        !Важно в мутаторы нельзя передавать несколько параметров, если мы хотим это сделать
+        то нужно все эти параметры обернуть в обьект и потом передавать в payload
+        !еще один момент, нельзя выполнять асинхронные запросы на сервер, или писать setTimeout()
+        внутри мутаторов
+
+        вызываем мутатор в Action.vue:
+            updateCounter(val){
+                this.$store.commit('changeCounter', val);
+            }
+        то есть у обьект $store вызываем метод commit() где первым параметром передаем название 
+        мутатора, а вторым обьект с параметрами.
+    }
+
+
+    lesson 5 {
+        actions: именно в actions мы пишим функции в которой будет проходить какая то логика, работа
+        с сервером или какая то предварительная логика перед setterами
+
+        index.js:
+            actions: {
+                asyncChangeCounter({commit}, payload){
+                    setTimeout(()=>{
+                        commit('changeCounter', payload.counterValue);
+                    }, payload.timeoutDelay)
+                }
+            }
+        первым параметром мы передаем обьект context, но т.к. он очень обьемный можем просто получить
+        параметр commit у обьекта context, далее идет обьект payload со всеми параметрами передачи
+        ну и в теле происходит сама логика
+
+        чтобы вызвать action нужно у обьекта $store вызвать метод dispatch в Action.vue:
+            updateCounter(val){
+                this.$store.dispatch('asyncChangeCounter', {
+                    counterValue: val,
+                    timeoutDelay: 200
+                });
+            }
+    }
+
+
+    lesson 6 {
+        оптимизация:
+        для оптимизации желательно разделять на модули все сущности в vuex: например мы работаем с 
+        counter, существуют getter, mutation, action связанные с counter. Мы можем перенести всю логику
+        в новый файл в той же папке store, который называется counter, а в index.js мы добавим новое 
+        свойство modules:
+            import counter from "./counter"
+            ...
+            modules: {
+                counter
+            },
+        и в нем перечисляем все обьекты
+
+        а в файле counter.js экспортируем обьект со всеми свойствами:
+            export default {
+                state: {
+                    counter: 0,
+                },
+                getters: {
+                    computedCounter(state){
+                        return state.counter * 10
+                    }
+                },
+                mutations: {
+                    changeCounter(state, payload){
+                        state.counter+=payload;
+                    }
+                },
+                actions: {
+                    asyncChangeCounter({commit}, payload){
+                        setTimeout(()=>{
+                            commit('changeCounter', payload.counterValue);
+                        }, payload.timeoutDelay)
+                    }
+                }
+            }
     }
 }
