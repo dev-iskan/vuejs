@@ -1,21 +1,27 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
+    <div class="container pt-2">
+      <div class="form-group">
+        <label for="name">Car name</label>
+        <input type="text" id="name" class="form-control" v-model.trim="carName">
+      </div>
+       <div class="form-group">
+        <label for="year">Car year</label>
+        <input type="text" id="year" class="form-control" v-model.number="carYear">
+      </div>
+      <button class="btn btn-success" @click="createCar">
+        <label for="">Create car</label>
+      </button>
+      <button class="btn btn-primary" @click="loadCars">
+        <label for="">Load cars</label>
+      </button>
+    </div>
+    <hr>
+    <div class="container pt-2">
+    <ul class="list-group">
+      <li class="list-group-item" v-for="car of cars" :key="car.id"><strong>{{car.name}}</strong> - {{car.year}}</li>
     </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    </div>
   </div>
 </template>
 
@@ -24,37 +30,55 @@ export default {
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      carName: '',
+      carYear: 2018,
+      cars: [],
+      resource: null
     }
+  },
+  methods: {
+    createCar(){
+      const car = {
+        name: this.carName,
+        year: this.carYear
+      }
+      // this.$http.post('http://localhost:3000/cars', car)
+      // .then(response => {
+      //   return response.json();
+      // })
+      // .then(newCar=>{
+      //   console.log(newCar)
+      // })
+      // .catch(reject => {
+      //   console.log(reject);
+      // });
+
+      this.resource.save({}, car);
+    },
+    loadCars(){
+      // this.$http.get('http://localhost:3000/cars')
+      // .then(response=>{
+      //   return response.json();
+      // })
+      // .then(cars=>{
+      //   this.cars = cars;
+      // })
+      // .catch(reject => {
+      //   console.log(reject);
+      // });
+
+      this.resource.get()
+      .then(response=> response.json())
+      .then(cars=>{
+        this.cars = cars;
+      });
+    }
+  },
+  created(){
+    this.resource = this.$resource('cars');
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+<style scoped>
 </style>

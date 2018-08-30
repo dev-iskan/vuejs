@@ -1,3 +1,39 @@
 {
-    "cars": [ ]
+  "cars": [
+    {
+      "name": "Ford",
+      "year": 2018,
+      "id": 1
+    },
+    {
+      "name": "",
+      "year": 2018,
+      "id": 2
+    },
+    {
+      "name": "mazda",
+      "year": 2018,
+      "id": 3
+    },
+    {
+      "name": "Nexia",
+      "year": 2018,
+      "id": 4
+    },
+    {
+      "name": "Dodge",
+      "year": 2018,
+      "id": 5
+    },
+    {
+      "name": "",
+      "year": 2018,
+      "id": 6
+    },
+    {
+      "name": "",
+      "year": 2018,
+      "id": 7
+    }
+  ]
 }

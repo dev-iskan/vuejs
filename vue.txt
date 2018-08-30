@@ -1767,4 +1767,123 @@ Vue -resource:{
 
         запускаем 2 терминала: в одном пропишем npm run dev, во втором npm run server
     }
+
+
+    lesson 2 {
+        запросы POST: создадим мини форму в App.vue:
+        <div class="container pt-2">
+            <div class="form-group">
+                <label for="name">Car name</label>
+                <input type="text" id="name" class="form-control" v-model.trim="carName">
+            </div>
+            <div class="form-group">
+                <label for="year">Car year</label>
+                <input type="text" id="year" class="form-control" v-model.number="carYear">
+            </div>
+            <button class="btn btn-success" @click="createCar">
+                <label for="">Create car</label>
+            </button>
+        </div>
+
+        Мы биндим поля на переменные vue:
+        data () {
+            return {
+            carName: '',
+            carYear: 2018
+            }
+        },
+
+        создадим метод который будет сохранять в бд наши новые машины:
+        createCar(){
+            const car = {
+                name: this.carName,
+                year: this.carYear
+            }
+            this.$http.post('http://localhost:3000/cars', car)
+            .then(response => {
+                return response.json();
+            })
+            .then(newCar=>{
+                console.log(newCar)
+            })
+            .catch(reject => {
+                console.log(reject);
+            });
+        }
+
+        данный метод как раз работает с vue-resource, мы создаем машину с полученными именами,
+        далее вызываем метод у системной константы $http this.$http.post('адрес', обьект)
+        где первым параметром пишем адрес куда надо отправлять, а вторым сам обьект который надо отправить
+    }
+
+    lesson 3 {
+        Get запросы:
+
+        обращаемся к методу get у $http:
+        loadCars(){
+            this.$http.get('http://localhost:3000/cars')
+            .then(response=>{
+                return response.json();
+            })
+            .then(cars=>{
+                this.cars = cars;
+            })
+            .catch(reject => {
+                console.log(reject);
+            });
+        }
+    }
+
+    lesson 4 {
+        использование resource - можно использовать спец свойтсво $resource которое дает возможность 
+        работать с однотипными обьектами.
+        в цикле created можно добавить данное свойство:
+        created(){
+            this.resource = this.$resource('http://localhost:3000/cars')
+        }
+
+        и теперь можно перезаписать методы loadCars и createCar:
+        createCar(){
+        const car = {
+            name: this.carName,
+            year: this.carYear
+        }
+        this.resource.save({}, car); //метод save выполняется по POST методу, первым параметром берет
+        // обьект настроек, вторым обьект который надо отправить
+        },
+
+        loadCars(){
+        this.resource.get()
+        .then(response=> response.json())
+        .then(cars=>{
+            this.cars = cars;
+        });
+        }
+    }
+
+
+    lesson 5 {
+        глобальная настройка
+        чтобы создать baseURL:
+        в main.js обращаемся к параметру root:
+
+        Vue.use(VueRouter);
+
+        Vue.http.options.root ="http://localhost:3000/";
+
+        и убираем с resource данный кусок
+    }
+
+
+    lesson 6 {
+        интерсепторы- обратаывают запросы, добавляя хедеры изменяя методы и т.д.
+
+        в main.js добавим следующее:
+
+        Vue.http.interceptors.push(request=>{
+            request.headers.set('Auth', 'RAND TOKEN'+ Math.random());
+        });
+
+        данный интерсептор поймает запрос, переопределит добавив хедер Auth
+    }
 }
