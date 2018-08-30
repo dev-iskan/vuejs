@@ -1887,3 +1887,29 @@ Vue -resource:{
         данный интерсептор поймает запрос, переопределит добавив хедер Auth
     }
 }
+
+
+
+Vuex {
+    lesson 1{
+        установка:
+        npm i --save vuex
+
+        далее создаем папку store и в ней index.js в котором подключим Vuex:
+            import Vue from "vue"
+            import Vuex from "vuex"
+            Vue.use(Vuex);
+            
+            export default new Vuex.Store({
+                
+            });
+        и подлкючим в main.js:
+            import store from './store'
+            new Vue({
+            el: '#app',
+            store,
+            render: h => h(App)
+            })
+        
+    }
+}
