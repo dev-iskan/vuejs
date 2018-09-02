@@ -6,3 +6,32 @@ firebase:
 1-создаем проект
 2-настриваем аутентификацию через email и password
 3-доабавляем api ключ в main.js
+
+
+
+
+
+
+
+hosting firebase:
+
+Установите firebase-cli:
+$ npm install -g firebase-tools
+
+firebase login
+firebase init - но прежде нужно ввести     npm run build
+
+вы готовы : y
+выбираем hosting нажимаем пробел + enter
+
+в какой проект залить - выбираем свой
+
+какая публичная директория ? - dist
+
+конфигурировать как spa? - y
+
+перезаписать index.html? - n
+
+после создадутся 2 файла:  firebase.json и .firebasesrc
+
+вызываем firebase deploy
