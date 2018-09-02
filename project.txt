@@ -1,0 +1,8 @@
+vue init vuetify/webpack project-name
+
+
+
+firebase: 
+1-создаем проект
+2-настриваем аутентификацию через email и password
+3-доабавляем api ключ в main.js
