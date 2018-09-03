@@ -2048,3 +2048,214 @@ Vuex {
             }
     }
 }
+
+
+
+Анимация {
+    lesson 2 {
+        для создании анимации в Vue js есть специальный компонент который называется 
+        transition обернем в него наш параграф который будет появляться и исчезать при нажатии на кнопку:
+            <transition name="ma"> // ma - означает my animation
+                <p v-if="show">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, unde.</p>
+            </transition>
+        
+        у анимаций есть свои жизненные этапа, появление и время появления, исчезание и время исчезнания
+        для этого в <style> </style> добавим с именем transition классы:
+            .ma-enter {
+                
+            } /* первый этап enter, именно начальное состояние */
+
+            .ma-enter-active {
+                
+            } /* второй этап длится до тех пор пока элемент не появится */
+
+            .ma-enter-to {} /* третий этап, состояние когда элемент уже появится в дереве */
+
+            .ma-leave {} /* перед исчезновением элемента */
+
+            .ma-leave-active {
+                
+            } /* пока не исчезнет */
+
+            .ma-leave-to {
+                
+            } /* когда исчезнет */
+    }
+
+
+    lesson 3 {
+        с помощью классов в style мы можем создавать анимацию и давать ей время:
+        к примеру пусть параграф будет плавно появляться и исчезать используя opacity:
+            .ma-enter {
+                opacity: 0; // тут дается изначальный state до анимации
+            } 
+            .ma-enter-active {
+                transition: opacity 1s; // здесь как раз и прописывается анимация и ее время
+            } 
+            .ma-enter-to {}
+            .ma-leave {} 
+            .ma-leave-active {
+                animation: 1s ma-slide forwards; // тут будет анимация движения влево опишем снизу
+                transition: opacity 1s; // в том же самом порядке то теперь opacity в течение 1с будет стремиться к 0
+            }
+            .ma-leave-to {
+                opacity: 0; // конечно состояние
+            }
+        важный момент переходы задаются через transition, а анимация черзе animation, если у них время будет
+        разное, то по дефолту будет выбираться самое долгое время
+
+        также пропишем через @keyframes анимацию движения влево
+            @keyframes ma-slide {
+                from {
+                transform: translateX(0px);
+                } 
+                to {
+                transform: translateX(-100px);
+                }   
+            }
+
+        но также можно задать время по дефолту для vue, для этого нужно в тег <transition></transition>
+        добавить атрибут type="" где можно прописать animation или transition, тогда по дефолту будет
+        выбираться именно это время.:
+        <transition 
+            type="transition" name="ma">
+    }
+
+    lesson 4 {
+        другой способ задания длительности анимации это аттрибут duration:
+        <transition 
+         type="transition"
+         :duration="2000" // 2 секунды
+         name="ma">
+
+        либо передать обьект:
+        <transition 
+         type="transition"
+         :duration="{enter: 500, leave: 100}" // задаем время появления и исчезания
+         name="ma">
+
+        также есть аттрибут appear, который позволяет действовать анимации сразу при появлении в DOM дереве
+    }
+
+
+    lesson 5 {
+        пользовательские классы к примеру animate.css:
+        для этого мы сначала подключаем этот класс в index.html, далее у <transition></transition>
+        есть аттрибуты с такими же названиями как жизненные циклы: enter-active-class, leave-active-class
+        enter-to-class и т.д. вот именно в них мы прописываем необходимый класс из animate.css:
+            <transition
+                enter-active-class="animated bounce" // эффект при появлении параграфа
+                leave-active-class="animated pulse" // эффект при исчезании
+            >
+            <p v-if="show">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, unde.</p>
+            </transition>
+    }
+
+
+    lesson 6 {
+        если у нас внутри <transition> </transition> несколько обьектов например div, и мы хотим чтобы
+        они друг друга сменяли, то для этого используем mode:
+            <transition name="ma" mode="out-in">
+                <div class="alert alert-success" v-if="show" key="success">Success</div>
+                <div class="alert alert-danger" v-else key="danger">Danger</div>
+            </transition>
+        
+        при определенном условии будет появляться только один div, 
+        обязательно даем каждому из div ключ, в нашем случае success, danger
+        тут mode помогает с анимацией:
+            in-out: Сначала появляется новый элемент, и только после этого исчезает старый.
+            out-in: Сначала исчезает старый элемент, и только после этого появляется новый.
+    }
+
+
+    lesson 7 {
+        vue js предоставляет 8 событий для прослушки изменения для анимации:
+            <transition
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @after-enter="afterEnter"
+            @enter-cancelled="enterCancelled"
+
+            @before-leave="beforeLeave"
+            @leave="leave"
+            @after-leave="afterLeave"
+            @leave-cancelled="leaveCancelled"
+            >
+            <p v-if="show">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, unde.</p>
+            </transition>
+        мы можем биндить прослушки для этих событий и там прописывать какой-то код:
+            methods: {
+                beforeEnter (el) {
+                console.log("beforeEnter")
+                },
+                enter (el, done) //done функция которая должна выполниться когда анимация завершится
+                {
+                console.log("enter")
+                done()
+                },
+                afterEnter (el) {
+                console.log("afterEnter")
+                },
+                enterCancelled (el) {
+                console.log("enterCancelled")
+                },
+                beforeLeave (el) {
+                console.log("beforeLeave")
+                },
+                leave (el, done) {
+                console.log("leave")
+                done()
+                },
+                afterLeave (el) {
+                console.log("afterLeave")
+                },
+                leaveCancelled (el) {
+                console.log("leaveCancelled")
+                }
+            }
+        обязательно в enter и leave мы должны закончить анимацию вызвав метод done()
+        с помощью JS хуков мы можем использовать различные библиотеки анимации и т.д.
+    }
+
+    lesson 8 {
+        анимации списков, если мы хотим создать анимацию для списка или любых других обьектов 
+        внутри v-for, то используется тег transition-group:
+
+            <button class="btn btn-success" @click="add">Add</button>
+            <button class="btn btn-danger" @click="remove">Remove</button>
+            <hr>
+
+            <transition-group class="list-group width300" tag="ul" name="ma" :duration="700">
+                <li class="list-group-item" v-for="item in items" :key="item">{{item}}</li>
+            </transition-group>
+
+        тут мы видим что этому тегу можно дать как аттрибут тэг, и принцип работы такой же как и у 
+        обычного transition
+             .ma-enter-active, .ma-leave-active {
+                transition: 1s all
+            }
+            .ma-enter, .ma-leave-to {
+                transform: translateX(-300px)
+            }
+        
+        data() {
+            return {
+                items: [1,2,3,4,5],
+                nextNumb: 6
+            }
+        },
+
+        methods: {
+            getIndex () {
+                return Math.floor(Math.random() * this.items.length)
+            },
+
+            add () {
+                this.items.splice(this.getIndex(), 0, this.nextNumb++)
+            },
+            remove () {
+                this.items.splice(this.getIndex(),1)
+            }
+        }
+    }
+}
