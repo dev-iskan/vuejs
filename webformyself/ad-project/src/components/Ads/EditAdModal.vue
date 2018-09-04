@@ -1,7 +1,9 @@
 <template>
+  <!-- создаем модалку которая называется dialog и биндим modal параметр для того чтобы показывать -->
   <v-dialog width="400" v-model="modal">
+    <!-- добавляем кнопку в родительский компонент при котором будет отображаться модалка через свойство slot="activator" -->
     <v-btn class="warning mr-3"  slot="activator">Edit</v-btn>
-
+    <!-- отображаемая модалка -->
     <v-card>
       <v-container>
         <v-layout row>
@@ -48,7 +50,7 @@
 
 <script>
   export default {
-    props: ['ad'],
+    props: ['ad'], // получаем от родительского компонента данный продукт и его свойства
     data () {
       return {
         modal: false,
@@ -57,13 +59,13 @@
       }
     },
     methods: {
-      onCancel () {
+      onCancel () { // закрываем модалку и чистим свойства
         this.title = this.ad.title
         this.editedDescription = this.ad.description
         this.modal = false
       },
-      onSave () {
-        if (this.editedTitle !== '' && this.editedDescription !== '') {
+      onSave () { // сохраняем изменения вызывая updateAd экшн
+        if (this.editedTitle !== '' && this.editedDescription !== '') { // мини валидация
           this.$store.dispatch('updateAd', {
             title: this.editedTitle,
             description: this.editedDescription,

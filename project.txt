@@ -1,16 +1,12 @@
-vue init vuetify/webpack project-name
+vue init vuetify/webpack project-name - инициализируем проект
 
-
+  The v-container can be used for a center focused page, or given the fluid prop to extend its full width. 
+  v-layout is used for separating sections and contains the v-flex. The structure of your layout will be as follows, v-container » v-layout » v-flex.
 
 firebase: 
 1-создаем проект
-2-настриваем аутентификацию через email и password
-3-доабавляем api ключ в main.js
-
-
-
-
-
+2-настраиваем аутентификацию через email и password
+3-добавляем api ключ в main.js
 
 
 hosting firebase:

@@ -9,9 +9,12 @@ import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import AuthGuard from './auth-guard'
 
+/* Выше мы подключаем все необходимые компоненты, vue-router и т.д. @ указывает на корневую папку */
+
 Vue.use(Router)
 
 export default new Router({
+  /* создаем массив из роутов, для каждого даем имя компонент, а также некоторые роуты защищаем от вхождения */
   routes: [
     {
       path: '',
@@ -20,7 +23,7 @@ export default new Router({
     },
     {
       path: '/ad/:id',
-      props: true,
+      props: true, /* props позволяет компонентам получать переменные переданные через url */
       name: 'ad',
       component: Ad
     },
@@ -28,7 +31,7 @@ export default new Router({
       path: '/list',
       name: 'list',
       component: AdList,
-      beforeEnter: AuthGuard
+      beforeEnter: AuthGuard /* beforeEnter проверяет сначала данный guard */
     },
     {
       path: '/new',
@@ -53,5 +56,5 @@ export default new Router({
       beforeEnter: AuthGuard
     }
   ],
-  mode: 'history'
+  mode: 'history' /* убираем # в url  */
 })

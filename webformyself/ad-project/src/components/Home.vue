@@ -1,10 +1,11 @@
 <template>
+
   <div v-if="!loading">
     <v-container fluid>
       <v-layout row>
         <!-- Выравнивание по строке -->
         <v-flex xs12>
-          <!--  -->
+          <!-- карусель для отображения продуктов у которых есть статус promo -->
           <v-carousel>
             <v-carousel-item v-for="ad in promoAds" :key="ad.id" :src="ad.imageSrc">
               <div class="link">
@@ -16,6 +17,7 @@
       </v-layout>
     </v-container>
 
+  <!-- отображаем продукты в виде списка -->
     <v-container grid-list-lg>
       <v-layout row wrap>
         <v-flex xs12 sm6 md4 v-for="ad in ads" :key="ad.id">
@@ -40,6 +42,8 @@
       </v-layout>
     </v-container>
   </div>
+
+    <!-- создаем спиннер пока ожидается загрузка продуктов-->
   <div v-else>
     <v-container>
       <v-layout row>
@@ -60,13 +64,13 @@
   export default {
     computed: {
       promoAds () {
-        return this.$store.getters.promoAds
+        return this.$store.getters.promoAds // подгружаем promo
       },
       ads () {
-        return this.$store.getters.ads
+        return this.$store.getters.ads // подгружаем продукты
       },
       loading () {
-        return this.$store.getters.loading
+        return this.$store.getters.loading // проверка идет ли загрузка
       }
     }
   }

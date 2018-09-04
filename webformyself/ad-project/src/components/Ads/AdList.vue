@@ -1,9 +1,9 @@
 <template>
   <v-container>
+    <!-- отображаем данный layout если нету загрузки или если вообще есть наши продукты -->
     <v-layout row v-if="!loading && myAds.length !== 0">
       <!-- Выравнивание по строке -->
       <v-flex xs12 sm6 offset-sm3>
-        <!--  -->
         <h1 class="text--secondary mb-3">My ads</h1>
 
         <v-card v-for="ad in myAds" :key="ad.id" class="mb-3 elevation-10">
@@ -27,11 +27,14 @@
 
       </v-flex>
     </v-layout>
+    <!-- в противном случае показываем ниже -->
     <v-layout row v-else-if="!loading && myAds.length === 0">
       <v-flex xs12 class="text-xs-center">
         <h1 class="text--primary">You have no ads yet</h1>
       </v-flex>
     </v-layout>
+
+    <!-- если идет загрузка показываем блок со спинером -->
     <v-layout row v-else>
       <v-flex xs12 class="text-xs-center">
         <v-progress-circular

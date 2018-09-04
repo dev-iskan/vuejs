@@ -3,7 +3,7 @@
     <v-layout row>
       <!-- Выравнивание по строке -->
       <v-flex xs12>
-        <!--  -->
+        <!-- отображаем данный продукт -->
         <v-card v-if="!loading">
           <v-img :src="ad.imageSrc"></v-img>
           <v-card-text>
@@ -12,11 +12,14 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
+            <!-- вызываем модалку изменения -->
             <edit-ad-modal :ad="ad" v-if="isOwner"></edit-ad-modal>
+            <!-- вызываем модалку покупки  инициализация в main.js -->
             <app-buy-modal :ad="ad"></app-buy-modal>
           </v-card-actions>
         </v-card>
 
+        <!-- в ином случае показываем спиннер -->
         <div class="text-xs-center" v-else>
           <v-progress-circular
             :size="100"
@@ -31,11 +34,11 @@
 </template>
 
 <script>
-  import EditAdModal from './EditAdModal'
+  import EditAdModal from './EditAdModal' // импортируем модалку
   export default {
-    props: ['id'],
+    props: ['id'], // получаем id из url query прописано в router/index.js
     computed: {
-      ad () {
+      ad () { // подгружаем данный продукт
         const id = this.id
         return this.$store.getters.adById(id)
       },
@@ -44,11 +47,11 @@
         return this.$store.getters.loading
       },
 
-      isOwner () {
+      isOwner () { // проверяем кто просматривает данный продукет, если создатель то вернет true
         return this.ad.ownerId === this.$store.getters.user.id
       }
     },
-    components: {
+    components: { // добавляем компонент
       EditAdModal
     }
   }

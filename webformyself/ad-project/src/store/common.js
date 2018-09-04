@@ -1,3 +1,4 @@
+// модуль для ошибок и загрузки
 export default {
   state: {
     loading: false,

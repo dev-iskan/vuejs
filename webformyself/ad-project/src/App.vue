@@ -1,11 +1,18 @@
 <template>
+   <!-- основной layout -->
   <v-app>
+   
+     <!-- app аттрибут означает что drawer будет для всех страниц, temporary- говорит чтобы drawer
+  скрывался, миндим на drawer чтобы открывать и скрывать -->
   <v-navigation-drawer 
   app 
   temporary
   v-model="drawer" 
   >
-  <v-list> <!-- создаем List в drawer -->
+ 
+<!-- создаем List в drawer , проходим по loop для отображения всех ссылок, а через 
+  :to направляем на определенный роут-->
+  <v-list> 
           <v-list-tile 
           v-for="link of links"
           :key="link.title"
@@ -20,6 +27,8 @@
             </v-list-tile-content>
 
           </v-list-tile>
+
+          <!-- данный item у list нужен для выхода из аутентификации -->
           <v-list-tile 
             @click="onLogOut"
             v-if="isUserLoggedIn"
@@ -36,7 +45,9 @@
         </v-list>
   </v-navigation-drawer>
 
+  <!-- toolbar наверху, даем ему темную цветовую схему-->
   <v-toolbar dark color="primary">
+
     <!-- добавляем класс hidden-md-and-up который позволяет скрывать элементы при определенных размерах
     в нашем случае нужно скрывать иконку дровера при размере больше среднего -->
     <v-toolbar-side-icon
@@ -45,6 +56,7 @@
     ></v-toolbar-side-icon>
 
     <v-toolbar-title class="white--text">
+      <!-- добавляем роутер-линк на главную страницу -->
       <router-link tag="span" to="/" class="pointer">Ad application</router-link>
     </v-toolbar-title>
 
@@ -69,9 +81,13 @@
         </v-btn>
     </v-toolbar-items>
   </v-toolbar>
+
+  <!-- в v-content будут подгужаться компоненты назначенные в router папке -->
   <v-content>
       <router-view></router-view>
   </v-content>
+
+  <!-- здесь мы подключаем snackbar который будет отображать текст ошибок на любой из страниц -->
     <v-snackbar
         v-if="error"
         :multi-line="true"
@@ -96,27 +112,27 @@
 export default {
   data () {
     return {
-      drawer: false
+      drawer: false // свойство для отображения дровера
     }
   },
   methods: {
     closeError () {
-      this.$store.dispatch('clearError')
+      this.$store.dispatch('clearError') // диспатчим акшен который будет очишать ошибки, чтобы спрятать snackbar
     },
     onLogOut () {
-      this.$store.dispatch('logoutUser')
-      this.$router.push('/')
+      this.$store.dispatch('logoutUser') // диспатчим акшен выхода из сессии
+      this.$router.push('/') // автоматически перенаправлять на главную страницу при выходе из сессии
     }
   },
   computed: {
-    error () {
+    error () { // данный getter нужен для отображения ошибок если таковы возникнут
       return this.$store.getters.error
     },
-    isUserLoggedIn () {
+    isUserLoggedIn () { // getter для проверки сессии пользователя
       return this.$store.getters.isUserLoggedIn
     },
-    links () {
-      if (this.isUserLoggedIn) {
+    links () { // массив из ссылок для отображения в toolbar и drawer
+      if (this.isUserLoggedIn) { // если пользователь зарегистрирован то показываем определенный контент
         return [
         { title: 'Orders', icon: 'bookmark_border', url: '/orders' },
         { title: 'New ad', icon: 'note_add', url: '/new' },

@@ -1,7 +1,9 @@
 <template>
+ <!-- создаем модалку которая называется dialog и биндим modal параметр для того чтобы показывать -->
   <v-dialog width="400" v-model="modal">
+     <!-- добавляем кнопку в родительский компонент при котором будет отображаться модалка через свойство slot="activator" -->
     <v-btn class="primary ml-3"  slot="activator">Buy</v-btn>
-
+<!-- отображаемая модалка -->
     <v-card>
       <v-container>
         <v-layout row>
@@ -36,6 +38,7 @@
           <v-flex xs12>
             <v-card-actions>
               <v-spacer></v-spacer>
+              <!-- добавляем Local loading для показания выполнения асинхронного запроса -->
               <v-btn :disabled="localLoading" flat @click="onCancel">Close</v-btn>
               <v-btn :disabled="localLoading" :loading="localLoading" flat class="success" @click="onSave">Buy it</v-btn>
             </v-card-actions>
@@ -48,7 +51,7 @@
 
 <script>
   export default {
-    props: ['ad'],
+    props: ['ad'], // получаем продукт от родительского компонента
     data () {
       return {
         modal: false,
@@ -63,7 +66,7 @@
         this.phone = ''
         this.modal = false
       },
-      onSave () {
+      onSave () { // проверяем валидацию и диспатчим createOrder получая промисс или resolve
         if (this.name !== '' && this.phone !== '') {
           this.localLoading = true
           this.$store.dispatch('createOrder', {
@@ -72,6 +75,7 @@
             adId: this.ad.id,
             ownerId: this.ad.ownerId
           })
+          // после выполнения кода выше чистим наши поля и закрываем модалку
           .finally(() => {
             this.name = ''
             this.phone = ''

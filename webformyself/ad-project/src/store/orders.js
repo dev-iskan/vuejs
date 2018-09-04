@@ -1,5 +1,6 @@
 import * as fb from 'firebase'
 
+// класс Order для хранения обьектов
 class Order {
   constructor (name, phone, adId, done = false, id = null) {
     this.name = name
@@ -20,17 +21,21 @@ export default {
     }
   },
   getters: {
+    // получаем заказы которые сделаны
     doneOrders (state) {
       return state.orders.filter(order => order.done)
     },
+    // получаем заказы которые не выполнены
     undoneOrders (state) {
       return state.orders.filter(order => !order.done)
     },
+    // получаем все заказы
     orders (state, getters) {
       return getters.undoneOrders.concat(getters.doneOrders)
     }
   },
   actions: {
+    // создаем заказ и сохраняем его в бд
     async createOrder ({commit}, {name, phone, adId, ownerId}) {
       const order = new Order(name, phone, adId)
       commit('clearError')
@@ -42,6 +47,7 @@ export default {
       }
     },
 
+    // получаем все заказы из бд метод похож из ads.js
     async fetchOrders ({commit, getters}) {
       commit('clearError')
       commit('setLoading', true)
@@ -70,6 +76,7 @@ export default {
       }
     },
 
+    // маркируем заказ как выполненный просто обновляя его свойство done
     async markOrderDone ({commit, getters}, payload) {
       try {
         commit('clearError')
