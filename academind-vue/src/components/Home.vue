@@ -5,10 +5,21 @@
         <v-btn large to="/meetups" class="info">Explore Meetups</v-btn>
       </v-flex>
             <v-flex xs12 sm6 class="text-xs-center text-sm-left">
-        <v-btn large to="/meetups" class="info">Organize Meetups</v-btn>
+        <v-btn large to="/meetup/new" class="info">Organize Meetups</v-btn>
       </v-flex>
     </v-layout>
-    <v-layout row class="mt-2">
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular
+      :size="70"
+      :width="7"
+      color="purple"
+      indeterminate
+      v-if="loading"
+    ></v-progress-circular>
+      </v-flex>
+    </v-layout>
+    <v-layout row class="mt-2" v-if="!loading">
       <v-flex xs12>
         <v-carousel style="cursor: pointer;">
         <v-carousel-item
@@ -17,7 +28,7 @@
           :src="meetup.imageUrl"
           @click="onLoadMeetup(meetup.id)"
         >
-          <div class="title">{{meetup.title}}</div>  
+          <div class="title">{{meetup.title}}</div>
         </v-carousel-item>
       </v-carousel>
       </v-flex>
@@ -40,6 +51,9 @@
     computed: {
       meetups () {
         return this.$store.getters.featuredMeetups
+      },
+      loading () {
+        return this.$store.getters.loading
       }
     }
   }

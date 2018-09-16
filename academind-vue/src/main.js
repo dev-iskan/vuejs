@@ -4,6 +4,9 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import { store } from './store/index'
+import DateFilter from './filters/date'
+import * as firebase from 'firebase'
+import Alert from './components/Shared/Alert'
 
 Vue.use(Vuetify, {
   theme: {
@@ -14,6 +17,8 @@ Vue.use(Vuetify, {
   }
 })
 
+Vue.filter('date', DateFilter)
+Vue.component('app-alert', Alert)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -21,5 +26,21 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created () {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyAavIDhM34rpmSmisQnvQ-VgxTR6Hgnknw',
+      authDomain: 'academind-vue.firebaseapp.com',
+      databaseURL: 'https://academind-vue.firebaseio.com',
+      projectId: 'academind-vue',
+      storageBucket: 'academind-vue.appspot.com',
+      messagingSenderId: '498107050653'
+    })
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$store.dispatch('autoSignIn', user)
+      }
+    })
+    this.$store.dispatch('loadMeetups')
+  }
 })

@@ -32,8 +32,8 @@ export default {
 
       try {
         // создаем пользователя передавая ему email и пароль и возвращаем пользователя в виде обьекта
-        const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-        commit('setUser', new User(user.id))
+        const response = await fb.auth().createUserWithEmailAndPassword(email, password)
+        commit('setUser', new User(response.user.uid))
         commit('setLoading', false)
       } catch (error) {
         commit('setLoading', false)
